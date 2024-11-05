@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Temperature Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #temperature-display {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Temperature Monitor</h1>
+    <div id="temperature-display">Waiting for temperature data...</div>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8000/ws/temperature/');
+    
+        socket.onopen = function() {
+            console.log("WebSocket is connected");
+        };
+    
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.getElementById('temperature-display').innerText = data.message;
+        };
+    
+        socket.onerror = function(event) {
+            console.error("WebSocket error observed:", event);
+        };
+    
+        socket.onclose = function() {
+            console.log("WebSocket is closed");
+        };
+    </script>
+    
+</body>
+</html>
